@@ -1,12 +1,25 @@
-const express = require('express');
+const express = require("express");
 const app = express();
 const port = 3000;
+const mongoose = require("mongoose");
+const dotenv = require('dotenv')
 
-app.get('/', (req, res) => {
+dotenv.config()
+//DB Connection
+mongoose.connect(
+  process.env.DB_LINK,
+  { useNewUrlParser: true, useUnifiedTopology: true  },
+  () => {
+    console.log("connected to DB");
+  }
+);
+//middleWares
+app.use(express.json())
 
-  res.send('welcome to back-end');
-});
+//import routes
+const authRoute = require("./routes/auth");
 
+//route middleWares
+app.use("/api/user", authRoute);
 
-
-app.listen(port, () => `Server running on port ${port}`);
+app.listen(port, () => console.log(`Server running on port ${port}`));
