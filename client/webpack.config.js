@@ -49,7 +49,7 @@ module.exports ={
         ]
     },
     devServer:{
-        port:1234,
+        port:3008,
         contentBase:'src',
         hot:true,
         inline:true
