@@ -10,7 +10,7 @@ module.exports ={
     output:{
         path:path.resolve(__dirname,'dist'),
         filename:"bundle.js",
-        // publicPath:'/dist'
+        publicPath:'/'
     },
     module:{
         rules:[
@@ -49,8 +49,9 @@ module.exports ={
         ]
     },
     devServer:{
-        port:3008,
+        port:8000,
         contentBase:'src',
+        historyApiFallback: true,
         hot:true,
         inline:true
     },
