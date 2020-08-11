@@ -1,7 +1,7 @@
 const express = require("express");
-const http = require('http')
+const http = require("http");
 const app = express();
-const server = http.createServer(app)
+const server = http.createServer(app);
 const port = 3000;
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
@@ -22,6 +22,11 @@ const authRoute = require("./routes/auth");
 //route middleWares
 app.use("/api/user", authRoute);
 
-io.on("connection",(socket)=>{console.log('new web socket connection')})
+io.on("connection", socket => {
+  console.log("new web socket connection");
+  socket.on('disconnect',()=>{
+    console.log('user left')
+  })
+});
 
 server.listen(port, () => console.log(`Server running on port ${port}`));
