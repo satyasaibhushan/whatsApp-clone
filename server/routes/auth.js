@@ -3,6 +3,7 @@ const User = require("../model/user");
 const { registrationValidation, loginValidation, isEmail } = require("../validation");
 const bcrypt = require("bcryptjs");
 const jwt = require('jsonwebtoken');
+const { json } = require("express");
 
 router.post("/register", async (req, res) => {
   const { error } = registrationValidation(req.body);
@@ -35,7 +36,7 @@ router.post("/register", async (req, res) => {
 //login
 router.post("/login", async (req, res) => {
   const { error } = loginValidation(req.body);
-  if (error) return res.status(400).send(error.details[0].message);
+  if (error) return res.status(400).send(JSON.stringify(error.details[0].message));
 
   //checking if given data is email/name
   const { error: isEmailGivenError } = isEmail(req.body);
@@ -43,14 +44,14 @@ router.post("/login", async (req, res) => {
     ? await User.findOne({ email: req.body.loginID })
     : await User.findOne({ name: req.body.loginID });
 
-  if (!user) return res.status(400).send("Email or password is invalid");
+  if (!user) return res.status(400).send(JSON.stringify("Email or password is invalid"));
   else {
     //validating password
     const validPassword = await bcrypt.compare(req.body.password,user.password)
-    if(!validPassword) return res.status(400).send("Email or password is invalid")
+    if(!validPassword) return res.status(400).send(JSON.stringify("Email or password is invalid"))
     //json web token genereation
     const token = jwt.sign({_id:user.id}, process.env.TOKEN_SECRET);
-    res.header('auth-token',token).send(token)
+    res.header('auth-token',token).send(JSON.stringify(token))
   }
 });
 
