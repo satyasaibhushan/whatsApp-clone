@@ -6,7 +6,7 @@ var {CleanWebpackPlugin} = require('clean-webpack-plugin')
 var SRC_DIR = path.resolve(__dirname,"src")
 
 module.exports ={
-    entry:'./src/js/index.js',
+    entry: ['@babel/polyfill', './src/js/index.js'],
     output:{
         path:path.resolve(__dirname,'dist'),
         filename:"bundle.js",
@@ -19,7 +19,11 @@ module.exports ={
                 include: SRC_DIR,
                 loader:"babel-loader",
                 query:{
-                    presets:["@babel/env","@babel/react"]
+                    presets:[[
+                        "@babel/env", {
+                          "useBuiltIns": "entry"
+                        }],
+                        "@babel/react"],
                 }
             },
             {

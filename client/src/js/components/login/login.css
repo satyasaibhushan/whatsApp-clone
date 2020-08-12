@@ -1,71 +1,111 @@
-html, body {
-    font-family: 'Roboto', sans-serif;
-    padding: 0;
-    margin: 0;
-  }
-  
-  #root {
-    height: 100vh;
-  }
-  
-  * {
-    box-sizing: border-box;
-  }
-  
-  .loginContainerTotal {
+*{
+  font-family: "Roboto", sans-serif;
+  padding: 0;
+  margin: 0;
+  user-select: none;
+}
+
+#root {
+  height: 100vh;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.loginContainerTotal {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  height: 100vh;
+  align-items: center;
+  background-image: linear-gradient(to top, #dad4ec 0%, #dad4ec 1%, #f3e7e9 100%);}
+
+.loginInput {
+  box-sizing: border-box;
+  color: rgb(0, 35, 51);
+  cursor: text;
+  font-size: 15px;
+  height: 40px;
+  line-height: 20px;
+  width: 100%;
+  border-width: 1px;
+  border-style: solid;
+  border-color: rgb(220, 222, 225);
+  border-image: initial;
+  border-radius: 4px;
+  padding: 5px 10px;
+}
+
+.loginContainer {
+  border: solid 2rem transparent;
+  background-color: rgba(255, 255, 255, 0.658);
+  border-radius: 10px;
+  display: block;
+  justify-content: center;
+  width: 40%;
+}
+
+.loginWelcomediv {
+  /* width: 25%; */
+}
+.loginWelcomediv p {
+  font-size: 22px;
+  font-weight: bold;
+  margin: 1rem;
+  cursor: default;
+}
+
+.button {
+  color: #fff !important;
+  text-transform: uppercase;
+  text-decoration: none;
+  background: #2979ff;
+  padding: 20px;
+  border-radius: 5px;
+  display: inline-block;
+  border: none;
+  width: 70%;
+  cursor: pointer;
+}
+.signupForwardLink {
+  display: flex;
+  margin-top: 2rem;
+}
+.link {
+  font-family: "GT Walsheim Pro", Arial, sans-serif;
+  font-size: 15px;
+  cursor: pointer;
+  font-weight: bold;
+  color: rgb(55, 34, 211);
+  border-style: none;
+  background: none;
+  margin: 0 1rem;
+}
+.keepMeSignedInBox{
+    position: relative;
+}
+.keepMeSignedInContainer p,
+.signupForwardLink p {
+  font-size: 17px;
+  font-weight: normal;
+  cursor: default;
+}.keepMeSignedInContainer{
+    margin: 1.5rem;
     display: flex;
     justify-content: center;
-    text-align: center;
-    height: 100vh;
-    align-items: center;
-    background-color: #1A1A1D;
+}
+
+@media (min-width: 320px) and (max-width: 480px) {
+  .loginContainerTotal {
+    height: 100%;
   }
-  
+
   .loginContainer {
-    width: 20%;
+    width: 90%;
   }
-  
-  .loginInput {
-    border-radius: 0;
-    padding: 15px 20px;
-    width: 100%;
-  }
-  
-  .heading {
-    color: white;
-    font-size: 2.5em;
-    padding-bottom: 10px;
-    border-bottom: 2px solid white;
-  }
-  
-  .button {
-      color: #fff !important;
-      text-transform: uppercase;
-      text-decoration: none;
-      background: #2979FF;
-      padding: 20px;
-      border-radius: 5px;
-      display: inline-block;
-      border: none;
-      width: 100%;
-  }
-  
-  .mt-20 {
-    margin-top: 20px;
-  }
-  
-  @media (min-width: 320px) and (max-width: 480px) {
-    .loginContainerTotal {
-      height: 100%;
-    }
-  
-    .loginContainer {
-      width: 90%;
-    }
-  
-  
-  }
-  
-  button:focus {
-    outline: 0;
-  }
+}
+
+button:focus {
+  outline: 0;
+}
