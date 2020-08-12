@@ -5,10 +5,10 @@ import CheckBox from "../checkbox/checkbox";
 import "./login.css";
 
 export default function Login(props) {
+  console.log(props)
   const [name, setName] = useState("");
   const [room, setRoom] = useState("");
   const [keepSignedIn, setKeepSignedIn] = useState(false);
-  console.log(keepSignedIn);
 
   return (
     <div className="loginContainerTotal">
@@ -16,6 +16,7 @@ export default function Login(props) {
         <div className="loginWelcomediv">
           <div className="loginWelcomenote">
             <p>Welcome! </p>
+            <p style={{display:props.location.isNewlyRegistered ? 'block':'none' }}>you have sucessfully created your account</p>
             <p>Sign in to continue to your account.</p>
           </div>
         </div>

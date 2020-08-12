@@ -6,14 +6,14 @@ const jwt = require('jsonwebtoken');
 
 router.post("/register", async (req, res) => {
   const { error } = registrationValidation(req.body);
-  if (error) return res.status(400).send(error.details[0].message);
+  if (error) return res.status(400).send(JSON.stringify(error.details[0].message));
 
   //check if user/email already exists
   const doesEmailexists = await User.findOne({ email: req.body.email });
-  if (doesEmailexists) return res.status(400).send("Email already exists");
+  if (doesEmailexists) return res.status(400).send(JSON.stringify('Email already exists'));
 
   const doesUserexists = await User.findOne({ name: req.body.name });
-  if (doesUserexists) return res.status(400).send("user name is taken.Please try a different one");
+  if (doesUserexists) return res.status(400).send(JSON.stringify('user name is taken.Please try a different one'));
 
   //Hashing of passwords
   const salt = bcrypt.genSaltSync(10);

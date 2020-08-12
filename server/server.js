@@ -3,6 +3,7 @@ const http = require("http");
 const app = express();
 const server = http.createServer(app);
 const port = 3000;
+const cors = require('cors')
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const socketio = require("socket.io");
@@ -14,6 +15,7 @@ mongoose.connect(process.env.DB_LINK, { useNewUrlParser: true, useUnifiedTopolog
   console.log("connected to DB");
 });
 //middleWares
+app.use(cors())
 app.use(express.json());
 
 //import routes

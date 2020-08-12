@@ -8,9 +8,28 @@ export default function Login(props) {
   const [emailAdress, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [reEnteredPassword, setReEnteredPassword] = useState("");
-  const [keepSignedIn, setKeepSignedIn] = useState(false);
 
-  
+  let postRegistaryDetails = async () => {
+    let reqObject = { name: name, email: emailAdress, password: password };
+    if (password != reEnteredPassword) {
+      alert("Passwords shold match");
+    } else {
+      const response = await fetch("http://localhost:3000/api/user/register", {
+        method: "POST",
+        headers: {
+          "content-Type": "application/json",
+        },
+        body: JSON.stringify(reqObject),
+      }).then(res => {
+          console.log(res)
+        if (res.ok) {
+           props.history.push({pathname:'/login',isNewlyRegistered:true})
+          return res.json();
+        } else res.json().then(x => alert(x));
+      });
+      console.log(response, reqObject);
+    }
+  };
 
   return (
     <div className="loginContainerTotal">
@@ -53,7 +72,7 @@ export default function Login(props) {
             />
           </div>
           <div className="">
-            <button className={"button "} type="submit">
+            <button className={"button "} type="submit" onClick={postRegistaryDetails}>
               Sign Up
             </button>
           </div>
