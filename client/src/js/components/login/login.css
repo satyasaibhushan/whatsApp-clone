@@ -1,4 +1,4 @@
-*{
+* {
   font-family: "Roboto", sans-serif;
   padding: 0;
   margin: 0;
@@ -19,7 +19,8 @@
   text-align: center;
   height: 100vh;
   align-items: center;
-  background-image: linear-gradient(to top, #dad4ec 0%, #dad4ec 1%, #f3e7e9 100%);}
+  background-image: linear-gradient(to top, #dad4ec 0%, #dad4ec 1%, #f3e7e9 100%);
+}
 
 .loginInput {
   box-sizing: border-box;
@@ -46,9 +47,6 @@
   width: 40%;
 }
 
-.loginWelcomediv {
-  /* width: 25%; */
-}
 .loginWelcomediv p {
   font-size: 22px;
   font-weight: bold;
@@ -82,18 +80,19 @@
   background: none;
   margin: 0 1rem;
 }
-.keepMeSignedInBox{
-    position: relative;
+.keepMeSignedInBox {
+  position: relative;
 }
 .keepMeSignedInContainer p,
 .signupForwardLink p {
   font-size: 17px;
   font-weight: normal;
   cursor: default;
-}.keepMeSignedInContainer{
-    margin: 1.5rem;
-    display: flex;
-    justify-content: center;
+}
+.keepMeSignedInContainer {
+  margin: 1.5rem;
+  display: flex;
+  justify-content: center;
 }
 
 @media (min-width: 320px) and (max-width: 480px) {

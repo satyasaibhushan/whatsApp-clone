@@ -8,6 +8,10 @@ const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const socketio = require("socket.io");
 var io = socketio(server);
+let socketEvents = require("./socket")
+
+//import routes
+const authRoute = require("./routes/auth");
 
 dotenv.config();
 //DB Connection
@@ -18,17 +22,11 @@ mongoose.connect(process.env.DB_LINK, { useNewUrlParser: true, useUnifiedTopolog
 app.use(cors())
 app.use(express.json());
 
-//import routes
-const authRoute = require("./routes/auth");
+
 
 //route middleWares
 app.use("/api/user", authRoute);
-
-io.on("connection", socket => {
-  console.log("new web socket connection");
-  socket.on('disconnect',()=>{
-    console.log('user left')
-  })
-});
+//socket.io all functionalities
+io.on("connection", socketEvents);
 
 server.listen(port, () => console.log(`Server running on port ${port}`));

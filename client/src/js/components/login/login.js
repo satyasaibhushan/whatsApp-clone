@@ -13,18 +13,15 @@ export default function Login(props) {
     let reqObject = { loginID: loginId, password: password };
     const response = await fetch("http://localhost:3000/api/user/login", {
       method: "POST",
-      headers: {
-        "content-Type": "application/json",
-      },
+      headers: { "content-Type": "application/json" },
       body: JSON.stringify(reqObject),
     }).then(res => {
-      console.log(res);
-      if (res.ok) {
-        props.history.push({ pathname: "/chat"});
-        return res.json();
-      } else res.json().then(x => alert(x));
+      if (res.ok) return res.json();
+      else res.json().then(x => alert(x));
     });
-    console.log(response, reqObject);
+    if (response) {
+      props.history.push({ pathname: "/chat", userToken: response });
+    }
   };
 
   return (

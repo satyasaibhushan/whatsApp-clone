@@ -5,7 +5,7 @@ import { BrowserRouter as Router, Route } from "react-router-dom";
 import "../css/styles.css";
 import Login from "./components/login/login";
 import Chat from "./components/chat/chat";
-import Register from "./components/register/register"
+import Register from "./components/login/register"
 
 const App = () => {
   return (
