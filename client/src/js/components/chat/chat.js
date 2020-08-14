@@ -1,23 +1,23 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import io from "socket.io-client";
 
 let socket;
 const ENDPOINT = "http://localhost:3000/";
 
 export default function Chat(props) {
-  const [userToken, setToken] = useState("");
-  const [room, setRoom] = useState("");
   const [inputValue, setInputValue] = useState("");
   const [messages, setMessages] = useState([]);
+  const room = useRef(null)
+  const userToken = useRef(null)
 
   useEffect(() => {
-    if (props.location.userToken && userToken != props.location.userToken) setToken(props.location.userToken);
-    setRoom(123456);
+    room.current= 123456;
+    userToken.current = props.location.userToken
     socket = io(ENDPOINT);
-    // console.log(socket);
-    socket.emit("join", { userToken, room }, error => {
-      if (error) alert(error);
-    });
+    if (room.current)
+      socket.emit("join", { userToken: userToken.current, room: room.current }, error => {
+        if (error) alert(error);
+      });
   }, [ENDPOINT, props.location]);
 
   useEffect(() => {
@@ -32,15 +32,18 @@ export default function Chat(props) {
 
   const sendMessage = e => {
     e.preventDefault();
-
-    if (message) {
-      socket.emit("sendMessage", message, () => setMessage(""));
+    if (inputValue) {
+      socket.emit("sendMessage", { message :inputValue,userToken: userToken.current,room: room.current}, error => {
+        if (error) alert(error);
+        else setInputValue("");
+      });
     }
   };
+  console.log(messages, inputValue);
 
   return (
-    <div className="outerContainer">
-      <div className="container">
+    <div className="chatContainerTotal">
+      <div className="chatContainer">
         <input
           type="text"
           value={inputValue}
