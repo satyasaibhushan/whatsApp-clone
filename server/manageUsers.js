@@ -2,73 +2,75 @@ const Group = require("./model/group");
 const User = require("./model/user");
 
 let addUserToRoom = async (userID, socketID, roomID) => {
-  let room = await Group.findOne({ roomID });
-  if (!room) {
-    let group = new Group({
-      roomID: roomID,
-      users: [{ userID, socketID }],
-      messages: [],
-    });
-    await group.save();
-  } else {
-      if(room.users.map(ele=>{ele.userID}).indexOf(userID)!=-1){
-    let users = room.users && room.users.length > 0 ? [...room.users, { userID, socketID }] : [{ userID, socketID }];
-    await Group.updateOne(
-      { roomID },
-      {
-        $set: {
-          users: users,
-        },
-      }
-    );}
-  }
-  let user = User.findById(userID);
-  let contacts = user.contacts && user.contacts.length > 0 ? [...user.contacts, { socketID }] : [{ socketID }];
-  await User.updateOne(user, {
-    $set: {
-      contacts: contacts,
-    },
+  userID = userID._id;
+  let userInfo;
+  await Group.findOne({ roomID }, function (err, room) {
+    if (room) {
+      let users = room.users;
+      let index = users.map(ele => ele.userID).indexOf(userID);
+      if (index == -1) room.users = [...room.users, { userID, socketID }];
+      else room.users[index].socketID = socketID;
+
+      room.save();
+    } else {
+      let group = new Group({
+        roomID: roomID,
+        users: [{ userID, socketID }],
+        messages: [],
+      });
+      group.save();
+    }
   });
-  return user;
+  await User.findById(userID, (err, user) => {
+    let contacts = user.contacts;
+    userInfo = user;
+    let index = contacts.map(ele => ele.roomID).indexOf(roomID);
+    if (index == -1) user.contacts = [...user.contacts, { roomID, socketID }];
+    else user.contacts[index].socketID = socketID;
+    user.save();
+  });
+  return userInfo;
 };
 
 let getUsersInRoom = async roomID => {
-  let room = await Group.findOne({ roomID });
-
-  if(room&&room.users&&room.users.length>0) return room.users.map(user => user.userID);
-};
-
-let getUserData = async userID => await User.findById(userID);
-
-let removeUserFromRoom = async socketID => {
-  let groups = await Group.find({
-    users: {
-      $elemMatch: {
-        socketID: socketID,
-      },
-    },
+  let userIDs;
+  await Group.findOne({ roomID }, (err, room) => {
+    userIDs = room.users.map(user => user.userID);
   });
 
-  groups.forEach(group => {});
-  //   let user = await User.findById(userID);
-  //   let group = await Group.findOne({ roomID });
+  return userIDs;
+};
 
-  //   let contacts = user.contacts.splice(contacts.indexOf({ socketID }), 1);
-  //   let users = group.users.splice(users.indexOf({ userID, socketID }), 1);
+let getUserData = async userID => {
+  userID = userID._id;
+  let userInfo;
+  await User.findById(userID, (err, user) => {
+    userInfo = user;
+  });
+  return userInfo;
+};
 
-  //   await User.update(user, {
-  //     $set: {
-  //       contacts: contacts,
-  //     },
-  //   });
-  //   await Group.update(
-  //     { roomID },
-  //     {
-  //       $set: {
-  //         users: users,
-  //       },
-  //     }
-  //   );
+let removeUserFromRoom = async socketID => {
+  let userID, userInfo;
+
+  await Group.findOne({ "users.socketID": socketID }, async (err, group) => {
+    if (group) {
+      let index = group.users.map(ele => ele.socketID).indexOf(socketID);
+      userID = group.users[index].userID;
+      group.users.splice(index, 1);
+      await group.save();
+
+      await User.findById(userID, async (err, user) => {
+        userInfo = user;
+        let index = user.contacts.map(ele => ele.socketID).indexOf(socketID);
+        user.contacts.splice(index, 1);
+        await user.save();
+      });
+    }
+  });
+
+  return userInfo;
+
 };
 
 module.exports = { addUserToRoom, removeUserFromRoom, getUserData, getUsersInRoom };
