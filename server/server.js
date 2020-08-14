@@ -27,6 +27,6 @@ app.use(express.json());
 //route middleWares
 app.use("/api/user", authRoute);
 //socket.io all functionalities
-io.on("connection", socketEvents);
+io.on("connection",(socket)=> socketEvents(socket,io));
 
 server.listen(port, () => console.log(`Server running on port ${port}`));

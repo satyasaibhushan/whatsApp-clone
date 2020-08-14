@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const contactSchema = new mongoose.Schema({
+    roomID: { type: String, required: true, min: 6, max: 255 },
     socketID: { type: String, required: true, min: 6, max: 255 }
   });
 

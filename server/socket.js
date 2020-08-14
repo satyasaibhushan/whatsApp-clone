@@ -1,38 +1,36 @@
 const tokenVerifier = require("./routes/verifyToken");
+const { addUserToRoom, removeUserFromRoom, getUserData, getUsersInRoom } = require("./manageUsers");
 
-
-let socketEvents = socket => {
+let socketEvents = async (socket, io) => {
   console.log("new web socket connection");
-//   socket.on("join", ({ userToken, room }, callback) => {
-//     let userID = tokenVerifier(userToken, callback);
-//     if (!userID) return;
-//     let { error, user } = addUserToRoom(userID, socket.id, room);
-//     if (error) callback(error);
+  socket.on("join", async ({userToken , room}, callback) => {
+    let userID = tokenVerifier(userToken, callback);
+    if (!userID) return;
+    let user = await addUserToRoom(userID, socket.id, room);
 
-//     socket.join(room);
-//     socket.emit("message", { user: "admin", text: `${user.name}, welcome to room ${room}.` });
-//     socket.broadcast.to(room).emit("message", { user: "admin", text: `${user.name} has joined!` });
+    socket.join(room);
+    socket.emit("message", { user: "admin", text: `${user.name}, welcome to room ${room}.` });
+    socket.broadcast.to(room).emit("message", { user: "admin", text: `${user.name} has joined!` });
 
-//     io.to(room).emit("roomData", { room: room, users: getUsersInRoom(room) });
+    io.to(room).emit("roomData", { room: room, users: await getUsersInRoom(room) });
 
-//     callback();
-//   });
+    callback();
+  });
 
-//   socket.on("sendMessage", ({ message, userToken, room }, callback) => {
-//     let userID = tokenVerifier(userToken, callback);
-//     if (!userID) return;
-//     const user = getUserData(userID, socket.id);
+  socket.on("sendMessage", async ({ message, userToken, room }, callback) => {
+    let userID = tokenVerifier(userToken, callback);
+    if (!userID) return;
+    let user = await getUserData(userID);
+    io.to(room).emit("message", { user: user.name, text: message });
 
-//     io.to(room).emit("message", { user: user.name, text: message });
+    callback();
+  });
 
-//     callback();
-//   });
-
-  socket.on("disconnect", () => {
+  socket.on("disconnect", async () => {
     console.log("user left");
     // let userID = tokenVerifier(userToken, callback);
     // if (!userID) return;
-    // const user = removeUserFromRoom(userID, socket.id);
+    // const user = await removeUserFromRoom(socket.id);
 
     // if (user) {
     //   io.to(room).emit("message", { user: "Admin", text: `${user.name} has left.` });
